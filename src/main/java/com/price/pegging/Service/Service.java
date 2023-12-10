@@ -1,5 +1,7 @@
 package com.price.pegging.Service;
 
+import com.price.pegging.Entity.DsaExport;
+import com.price.pegging.Entity.PricePegging;
 import com.price.pegging.Model.CommonResponse;
 import com.price.pegging.Model.UserDetail;
 import com.price.pegging.Entity.User;
@@ -13,4 +15,10 @@ public interface Service {
     UserDetail passwordMatch(String userPassword, User userDetail);
 
     CommonResponse readData(MultipartFile file);
+
+    CommonResponse peggingFileReadData(MultipartFile file);
+
+    List<DsaExport> getAllExportData(String applicationNo);
+
+    List<PricePegging> getAllPricePeggingData(String zone);
 }

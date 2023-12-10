@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="PRICE_PEGGING")
+@Table(name="DSA_EXPORT")
 @Data
-public class PricePeggingUpload {
+public class DsaExport {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
