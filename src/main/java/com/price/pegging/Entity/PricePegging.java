@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name="PRICE_PEGGING")
 @Data
@@ -30,6 +33,24 @@ public class PricePegging {
 
     @Column(name="pincode")
     private String pinCode;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name="upload_date",nullable = false)
+    private String uploadDate;
+    @PrePersist
+    private void oncreate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        uploadDate = currentDate.format(formatter);
+    }
+
+    public String getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
+    }
 
     public Long getPeggingId() {
         return peggingId;

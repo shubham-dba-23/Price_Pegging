@@ -3,6 +3,9 @@ package com.price.pegging.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name="DSA_EXPORT")
 @Data
@@ -36,6 +39,24 @@ public class DsaExport {
     private String lattitude;
     @Column(name="longitude")
     private String longitude;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name="upload_date",nullable = false)
+    private String uploadDate;
+    @PrePersist
+    private void oncreate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        uploadDate = currentDate.format(formatter);
+    }
+
+    public String getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
+    }
 
     public Long getsNo() {
         return sNo;

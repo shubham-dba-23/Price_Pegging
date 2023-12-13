@@ -14,11 +14,13 @@ public interface Service {
 
     UserDetail passwordMatch(String userPassword, User userDetail);
 
-    CommonResponse readData(MultipartFile file);
+    CommonResponse      readDataDsa(MultipartFile file);
 
     CommonResponse peggingFileReadData(MultipartFile file);
 
-    List<DsaExport> getAllExportData(String applicationNo);
+    List<DsaExport> getAllExportData(String applicationNo,String uploadDate);
 
-    List<PricePegging> getAllPricePeggingData(String zone);
+    List<PricePegging> getAllPricePeggingData(String zone,String uploadDate);
+
+    List getAllZone();
 }

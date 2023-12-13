@@ -24,7 +24,7 @@ public class Controller {
 
     @Autowired
     private Service service;
-
+@CrossOrigin
     @PostMapping("/loginValidation")
     public ResponseEntity<UserDetail> loginAuthentication(@RequestBody User userRequest)
     {
@@ -62,16 +62,16 @@ catch (Exception e)
         return new ResponseEntity<UserDetail>(commonResponse, HttpStatus.OK);
     }
 
-
+@CrossOrigin
     @PostMapping("/dsaExportUpload")
     public ResponseEntity<CommonResponse> exportFileUpload(@RequestParam("file") MultipartFile file)
     {
         CommonResponse commonResponse=new CommonResponse();
-        commonResponse=service.readData(file);
+        commonResponse=service.readDataDsa(file);
 
         return new ResponseEntity<CommonResponse>(commonResponse, HttpStatus.OK);
     }
-
+@CrossOrigin
     @PostMapping("/pricePeggingUpload")
     public ResponseEntity<CommonResponse> peggingFileUpload(@RequestParam("file") MultipartFile file)
     {
@@ -80,14 +80,14 @@ catch (Exception e)
 
         return new ResponseEntity<CommonResponse>(commonResponse, HttpStatus.OK);
     }
-
+@CrossOrigin
     @GetMapping("/pricePeggingData")
-    public ResponseEntity<PricePeggingData> exportPeggingData(@RequestParam(name="zone",required = false) String zone)
+    public ResponseEntity<PricePeggingData> exportPeggingData(@RequestParam(name="zone",required = false) String zone,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
         List<PricePegging> pricePeggingDatas=null;
         PricePeggingData pricePeggingData= new PricePeggingData();
 
-        pricePeggingDatas =service.getAllPricePeggingData(zone);
+        pricePeggingDatas =service.getAllPricePeggingData(zone,uploadDate);
 
         System.out.println(pricePeggingDatas.size());
         if(pricePeggingDatas.isEmpty())
@@ -111,14 +111,14 @@ catch (Exception e)
 
 
 
-
+@CrossOrigin
     @GetMapping("/exportData")
-    public ResponseEntity<ExportModel> exportData(@RequestParam(name="applicationNo",required = false) String applicationNo)
+    public ResponseEntity<ExportModel> exportData(@RequestParam(name="applicationNo",required = false) String applicationNo,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
         List<DsaExport> dsaExports=null;
         ExportModel dsaExportData= new ExportModel();
 
-        dsaExports=service.getAllExportData(applicationNo);
+        dsaExports=service.getAllExportData(applicationNo,uploadDate);
         System.out.println(dsaExports.size());
         if(dsaExports.isEmpty())
         {
@@ -134,6 +134,12 @@ catch (Exception e)
         }
         return new ResponseEntity<ExportModel>(dsaExportData, HttpStatus.OK);
 
+    }
+@CrossOrigin
+    @GetMapping("/allZone")
+    public List zoneDetail()
+    {
+        return service.getAllZone();
     }
 
 }
