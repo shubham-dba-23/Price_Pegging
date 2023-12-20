@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.JavaScriptUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class Controller {
     public ResponseEntity<UserDetail> loginAuthentication(@RequestBody User userRequest)
     {
 
-        List<User> userDetail=null;
+        List<User> userDetail=new ArrayList<>();
         UserDetail commonResponse= new UserDetail();
         String userEmail=userRequest.getEmail();
         String userPassword=userRequest.getPassword();
@@ -84,7 +85,7 @@ catch (Exception e)
     @GetMapping("/pricePeggingData")
     public ResponseEntity<PricePeggingData> exportPeggingData(@RequestParam(name="zone",required = false) String zone,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
-        List<PricePegging> pricePeggingDatas=null;
+        List<PricePegging> pricePeggingDatas=new ArrayList<>();
         PricePeggingData pricePeggingData= new PricePeggingData();
 
         pricePeggingDatas =service.getAllPricePeggingData(zone,uploadDate);
@@ -115,7 +116,7 @@ catch (Exception e)
     @GetMapping("/exportData")
     public ResponseEntity<ExportModel> exportData(@RequestParam(name="applicationNo",required = false) String applicationNo,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
-        List<DsaExport> dsaExports=null;
+        List<DsaExport> dsaExports= new ArrayList<>();
         ExportModel dsaExportData= new ExportModel();
 
         dsaExports=service.getAllExportData(applicationNo,uploadDate);

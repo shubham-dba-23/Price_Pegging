@@ -95,7 +95,7 @@ public class ServiceImpl implements Service {
                     for (int i = 0; i < 13; i++) {
                         Cell cell = row.getCell(i);
 
-                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + row.getRowNum() + " is empty" : "";
+                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum()+1) + " is empty" : "";
 
                         if (errorMsg.isEmpty()) {
                             System.out.println("value="+cell.toString());
@@ -168,7 +168,7 @@ public class ServiceImpl implements Service {
         if (errorMsg.isEmpty() && count > 0) {
             dsaExportRepository.saveAll(dsaExports);
             commonResponse.setCode("0000");
-            commonResponse.setMsg("file uploaded successfully");
+            commonResponse.setMsg("file uploaded successfully "+dsaExports.size()+" row uploaded.");
         } else {
             if (errorMsg.isEmpty()) {
                 errorMsg = "file is empty or technical issue";
@@ -216,7 +216,7 @@ public class ServiceImpl implements Service {
 
                         Cell cell = row.getCell(i);
 
-                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + row.getRowNum() + " is empty" : "";
+                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum()+1) + " is empty" : "";
 
 
                         if (errorMsg.isEmpty()) {
@@ -269,7 +269,7 @@ public class ServiceImpl implements Service {
         if (errorMsg.isEmpty() && count > 0) {
             pricePeggingRepository.saveAll(peggingUploads);
             commonResponse.setCode("0000");
-            commonResponse.setMsg("file uploaded successfully");
+            commonResponse.setMsg("file uploaded successfully "+ peggingUploads.size()+"row uploaded.");
         } else {
             if (errorMsg.isEmpty()) {
                 errorMsg = "file is empty or technical issue";
@@ -288,7 +288,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public List<DsaExport> getAllExportData(String applicationNo,String uploadDate) {
-        List<DsaExport> exportsData = null;
+        List<DsaExport> exportsData = new ArrayList<>();
 //
 //        if (applicationNo == null) {
 //            exportsData = dsaExportRepository.findAll();
@@ -315,13 +315,8 @@ public class ServiceImpl implements Service {
      */
     @Override
     public List<PricePegging> getAllPricePeggingData(String zone,String uploadDate) {
-        List<PricePegging> pricePeggings = null;
+        List<PricePegging> pricePeggings = new ArrayList<>();
 
-//        if (zone == null && uploadDate==null) {
-//            pricePeggings = pricePeggingRepository.findAll();
-//        } else {
-//            pricePeggings = pricePeggingRepository.findByZone(zone);
-//        }
 
         if (zone != null && uploadDate != null) {
             pricePeggings = pricePeggingRepository.findByZoneAndUpdatedDate(zone, uploadDate);
