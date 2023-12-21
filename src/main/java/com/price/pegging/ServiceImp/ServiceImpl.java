@@ -115,7 +115,7 @@ public class ServiceImpl implements Service {
                                     dsaExport.setProperty_address(row.getCell(4).toString());
                                     break;
                                 case 5:
-                                    dsaExport.setPropertyPincode(row.getCell(5).toString());
+                                    dsaExport.setPropertyPincode(row.getCell(5).toString().replace(".0",""));
                                     break;
                                 case 6:
                                     dsaExport.setRegion(row.getCell(6).toString());
@@ -127,7 +127,8 @@ public class ServiceImpl implements Service {
                                     dsaExport.setLocation(row.getCell(8).toString());
                                     break;
                                 case 9:
-                                    dsaExport.setRate_per_sqft(row.getCell(9).toString());
+                                    dsaExport.setRate_per_sqft(row.getCell(9).toString().replace(".0",""));
+
                                     break;
                                 case 10:
                                     dsaExport.setProperty_type(row.getCell(10).toString());
@@ -140,17 +141,17 @@ public class ServiceImpl implements Service {
                                     break;
                             }
 
-                            dsaExports.add(dsaExport);
 
-                            if (!errorMsg.isEmpty())
-                                break;
                         }
                         if (!errorMsg.isEmpty())
                             break;
                     }
                     if (!errorMsg.isEmpty())
                         break;
+                    dsaExports.add(dsaExport);
+
                 }
+
             }
             else
                          {
@@ -240,17 +241,18 @@ public class ServiceImpl implements Service {
                                     pricePeggingUpload.setAverageRate(row.getCell(4).toString());
                                     break;
                                 case 5:
-                                    pricePeggingUpload.setPinCode(row.getCell(5).toString());
+                                    pricePeggingUpload.setPinCode(row.getCell(5).toString().replace(".0",""));
                                     break;
                             }
                         }
-                        peggingUploads.add(pricePeggingUpload);
 
                         if (!errorMsg.isEmpty())
                             break;
                     }
                     if (!errorMsg.isEmpty())
                         break;
+                    peggingUploads.add(pricePeggingUpload);
+
                 }
             }
             else
@@ -269,7 +271,7 @@ public class ServiceImpl implements Service {
         if (errorMsg.isEmpty() && count > 0) {
             pricePeggingRepository.saveAll(peggingUploads);
             commonResponse.setCode("0000");
-            commonResponse.setMsg("file uploaded successfully "+ peggingUploads.size()+"row uploaded.");
+            commonResponse.setMsg("file uploaded successfully "+ peggingUploads.size()+" row uploaded.");
         } else {
             if (errorMsg.isEmpty()) {
                 errorMsg = "file is empty or technical issue";
@@ -289,12 +291,7 @@ public class ServiceImpl implements Service {
     @Override
     public List<DsaExport> getAllExportData(String applicationNo,String uploadDate) {
         List<DsaExport> exportsData = new ArrayList<>();
-//
-//        if (applicationNo == null) {
-//            exportsData = dsaExportRepository.findAll();
-//        } else {
-//            exportsData = dsaExportRepository.findByApplicationNo(applicationNo);
-//        }
+
 
         if (applicationNo != null && uploadDate != null) {
             exportsData = dsaExportRepository.findByApllicationAndUpdatedDate(applicationNo, uploadDate);
