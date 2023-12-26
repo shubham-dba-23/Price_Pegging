@@ -85,24 +85,24 @@ catch (Exception e)
     @GetMapping("/pricePeggingData")
     public ResponseEntity<PricePeggingData> exportPeggingData(@RequestParam(name="zone",required = false) String zone,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
-        List<PricePegging> pricePeggingDatas=new ArrayList<>();
+//        List<PricePegging> pricePeggingDatas=new ArrayList<>();
         PricePeggingData pricePeggingData= new PricePeggingData();
 
-        pricePeggingDatas =service.getAllPricePeggingData(zone,uploadDate);
-
-        System.out.println(pricePeggingDatas.size());
-        if(pricePeggingDatas.isEmpty())
-        {
-            pricePeggingData.setCode("1111");
-            pricePeggingData.setMsg("Data not found");
-            pricePeggingData.setPricePeggingList(null);
-        }
-        else
-        {
-            pricePeggingData.setCode("0000");
-            pricePeggingData.setMsg("Data found successfully");
-            pricePeggingData.setPricePeggingList(pricePeggingDatas);
-        }
+        pricePeggingData =service.getAllPricePeggingData(zone,uploadDate);
+//
+//        System.out.println(pricePeggingDatas.size());
+//        if(pricePeggingDatas.isEmpty())
+//        {
+//            pricePeggingData.setCode("1111");
+//            pricePeggingData.setMsg("Data not found");
+//            pricePeggingData.setPricePeggingList(null);
+//        }
+//        else
+//        {
+//            pricePeggingData.setCode("0000");
+//            pricePeggingData.setMsg("Data found successfully");
+//            pricePeggingData.setPricePeggingList(pricePeggingDatas);
+//        }
         return new ResponseEntity<PricePeggingData>(pricePeggingData, HttpStatus.OK);
 
     }
@@ -116,26 +116,27 @@ catch (Exception e)
     @GetMapping("/exportData")
     public ResponseEntity<ExportModel> exportData(@RequestParam(name="applicationNo",required = false) String applicationNo,@RequestParam(name="uploadDate",required = false) String uploadDate)
     {
-        List<DsaExport> dsaExports= new ArrayList<>();
-        ExportModel dsaExportData= new ExportModel();
+//        List<DsaExport> dsaExports= new ArrayList<>();
+        ExportModel exportModel= new ExportModel();
 
-        dsaExports=service.getAllExportData(applicationNo,uploadDate);
-        System.out.println(dsaExports.size());
-        if(dsaExports.isEmpty())
-        {
-            dsaExportData.setCode("1111");
-            dsaExportData.setMsg("Data not found");
-            dsaExportData.setDsaExportList(null);
-        }
-        else
-        {
-            dsaExportData.setCode("0000");
-            dsaExportData.setMsg("Data found successfully");
-            dsaExportData.setDsaExportList(dsaExports);
-        }
-        return new ResponseEntity<ExportModel>(dsaExportData, HttpStatus.OK);
+        exportModel=  service.getAllExportData(applicationNo,uploadDate);
+//        System.out.println(dsaExports.size());
+//        if(dsaExports.isEmpty())
+//        {
+//            dsaExportData.setCode("1111");
+//            dsaExportData.setMsg("Data not found");
+//            dsaExportData.setDsaExportList(null);
+//        }
+//        else
+//        {
+//            dsaExportData.setCode("0000");
+//            dsaExportData.setMsg("Data found successfully");
+//            dsaExportData.setDsaExportList(dsaExports);
+
+        return new ResponseEntity<>(exportModel, HttpStatus.OK);
 
     }
+
 @CrossOrigin
     @GetMapping("/allZone")
     public List zoneDetail()

@@ -1,8 +1,8 @@
 package com.price.pegging.Service;
 
-import com.price.pegging.Entity.DsaExport;
-import com.price.pegging.Entity.PricePegging;
 import com.price.pegging.Model.CommonResponse;
+import com.price.pegging.Model.ExportModel;
+import com.price.pegging.Model.PricePeggingData;
 import com.price.pegging.Model.UserDetail;
 import com.price.pegging.Entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +18,11 @@ public interface Service {
 
     CommonResponse peggingFileReadData(MultipartFile file);
 
-    List<DsaExport> getAllExportData(String applicationNo,String uploadDate);
+    ExportModel getAllExportData(String applicationNo, String uploadDate);
 
-    List<PricePegging> getAllPricePeggingData(String zone,String uploadDate);
+    PricePeggingData getAllPricePeggingData(String zone, String uploadDate);
 
     List getAllZone();
+
+
 }

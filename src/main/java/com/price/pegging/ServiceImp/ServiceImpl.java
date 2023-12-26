@@ -4,6 +4,8 @@ import com.price.pegging.Entity.DsaExport;
 import com.price.pegging.Entity.PricePegging;
 import com.price.pegging.FileUtilittyValidation;
 import com.price.pegging.Model.CommonResponse;
+import com.price.pegging.Model.ExportModel;
+import com.price.pegging.Model.PricePeggingData;
 import com.price.pegging.Model.UserDetail;
 import com.price.pegging.Entity.User;
 import com.price.pegging.Repository.DsaExportRepository;
@@ -12,6 +14,9 @@ import com.price.pegging.Repository.UserRepository;
 import com.price.pegging.Service.Service;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,11 +82,11 @@ public class ServiceImpl implements Service {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
             Boolean fileFormat = true;
-            Row headerRow=rowIterator.next();
+            Row headerRow = rowIterator.next();
 
-            fileFormat= fileUtilittyValidation.dsaFileFormat(headerRow);
+            fileFormat = fileUtilittyValidation.dsaFileFormat(headerRow);
 
-            if(fileFormat) {
+            if (fileFormat) {
 
                 System.out.println("file format matched");
 
@@ -95,10 +100,10 @@ public class ServiceImpl implements Service {
                     for (int i = 0; i < 13; i++) {
                         Cell cell = row.getCell(i);
 
-                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum()+1) + " is empty" : "";
+                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum() + 1) + " is empty" : "";
 
                         if (errorMsg.isEmpty()) {
-                            System.out.println("value="+cell.toString());
+                            System.out.println("value=" + cell.toString());
 
                             switch (i) {
 
@@ -115,7 +120,7 @@ public class ServiceImpl implements Service {
                                     dsaExport.setProperty_address(row.getCell(4).toString());
                                     break;
                                 case 5:
-                                    dsaExport.setPropertyPincode(row.getCell(5).toString().replace(".0",""));
+                                    dsaExport.setPropertyPincode(row.getCell(5).toString().replace(".0", ""));
                                     break;
                                 case 6:
                                     dsaExport.setRegion(row.getCell(6).toString());
@@ -127,7 +132,7 @@ public class ServiceImpl implements Service {
                                     dsaExport.setLocation(row.getCell(8).toString());
                                     break;
                                 case 9:
-                                    dsaExport.setRate_per_sqft(row.getCell(9).toString().replace(".0",""));
+                                    dsaExport.setRate_per_sqft(row.getCell(9).toString().replace(".0", ""));
 
                                     break;
                                 case 10:
@@ -152,12 +157,10 @@ public class ServiceImpl implements Service {
 
                 }
 
+            } else {
+                //   System.out.println("file format is not matched");
+                errorMsg = "file format is not matching or technical issue.";
             }
-            else
-                         {
-                          //   System.out.println("file format is not matched");
-                             errorMsg="file format is not matching or technical issue.";
-                         }
 
             System.out.println(errorMsg);
             //System.out.println(count);
@@ -169,7 +172,7 @@ public class ServiceImpl implements Service {
         if (errorMsg.isEmpty() && count > 0) {
             dsaExportRepository.saveAll(dsaExports);
             commonResponse.setCode("0000");
-            commonResponse.setMsg("file uploaded successfully "+dsaExports.size()+" row uploaded.");
+            commonResponse.setMsg("file uploaded successfully " + dsaExports.size() + " row uploaded.");
         } else {
             if (errorMsg.isEmpty()) {
                 errorMsg = "file is empty or technical issue";
@@ -198,13 +201,13 @@ public class ServiceImpl implements Service {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
-           // rowIterator.next();
-            Row headerRow=rowIterator.next();
-            Boolean fileFormat=true;
+            // rowIterator.next();
+            Row headerRow = rowIterator.next();
+            Boolean fileFormat = true;
 
-            fileFormat= fileUtilittyValidation.pricePeggingFileFormat(headerRow);
-            System.out.println("true/false "+fileFormat);
-            if(fileFormat) {
+            fileFormat = fileUtilittyValidation.pricePeggingFileFormat(headerRow);
+            System.out.println("true/false " + fileFormat);
+            if (fileFormat) {
 
 
                 while (rowIterator.hasNext()) {
@@ -217,7 +220,7 @@ public class ServiceImpl implements Service {
 
                         Cell cell = row.getCell(i);
 
-                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum()+1) + " is empty" : "";
+                        errorMsg = (cell == null || cell.getCellType() == CellType.BLANK) ? "file upload error due to row no " + (row.getRowNum() + 1) + " is empty" : "";
 
 
                         if (errorMsg.isEmpty()) {
@@ -241,7 +244,7 @@ public class ServiceImpl implements Service {
                                     pricePeggingUpload.setAverageRate(row.getCell(4).toString());
                                     break;
                                 case 5:
-                                    pricePeggingUpload.setPinCode(row.getCell(5).toString().replace(".0",""));
+                                    pricePeggingUpload.setPinCode(row.getCell(5).toString().replace(".0", ""));
                                     break;
                             }
                         }
@@ -254,11 +257,9 @@ public class ServiceImpl implements Service {
                     peggingUploads.add(pricePeggingUpload);
 
                 }
-            }
-            else
-            {
+            } else {
                 System.out.println("file format is not matched");
-                errorMsg="file format is not matching or technical issue.";
+                errorMsg = "file format is not matching or technical issue.";
             }
 
             System.out.println(errorMsg);
@@ -271,7 +272,7 @@ public class ServiceImpl implements Service {
         if (errorMsg.isEmpty() && count > 0) {
             pricePeggingRepository.saveAll(peggingUploads);
             commonResponse.setCode("0000");
-            commonResponse.setMsg("file uploaded successfully "+ peggingUploads.size()+" row uploaded.");
+            commonResponse.setMsg("file uploaded successfully " + peggingUploads.size() + " row uploaded.");
         } else {
             if (errorMsg.isEmpty()) {
                 errorMsg = "file is empty or technical issue";
@@ -289,21 +290,53 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public List<DsaExport> getAllExportData(String applicationNo,String uploadDate) {
+    public ExportModel getAllExportData(String applicationNo, String uploadDate) {
         List<DsaExport> exportsData = new ArrayList<>();
+        ExportModel exportModel = new ExportModel();
 
+
+        Long count;
+        int pageNumber = 0;
+        int pageSize = 3;
+
+        Page<DsaExport> exportDataPage = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         if (applicationNo != null && uploadDate != null) {
-            exportsData = dsaExportRepository.findByApllicationAndUpdatedDate(applicationNo, uploadDate);
+            exportDataPage = dsaExportRepository.findByApplicationNoAndUploadDate(applicationNo, uploadDate, pageable);
+            exportsData = exportDataPage.getContent();
+            count = dsaExportRepository.countByApplicationNoAndUploadDate(applicationNo, uploadDate);
+            System.out.println("Count" +" " +count);
         } else if (applicationNo != null) {
-            exportsData = dsaExportRepository.findByApplicationNo(applicationNo);
+
+            exportDataPage = dsaExportRepository.findByApplicationNo(applicationNo, pageable);
+            exportsData = exportDataPage.getContent();
+            count = dsaExportRepository.countByApplicationNo(applicationNo);
+            System.out.println("count" +" "+ count);
         } else if (uploadDate != null) {
-            exportsData = dsaExportRepository.findByUpdatedDate(uploadDate);
+            exportDataPage = dsaExportRepository.findByUploadDate(uploadDate, pageable);
+            exportsData = exportDataPage.getContent();
+            count = dsaExportRepository.countByUploadDate(uploadDate);
+            System.out.println("count" +" " +count);
         } else {
-            exportsData = dsaExportRepository.findAll();
+            exportDataPage = dsaExportRepository.findAll(pageable);
+            exportsData = exportDataPage.getContent();
+            count = dsaExportRepository.countByfindAll();
+            System.out.println("count" +" "+ count);
+
+        }
+        if (exportsData.isEmpty()) {
+            exportModel.setCode("1111");
+            exportModel.setMsg("Data not found");
+            exportModel.setDsaExportList(null);
+        } else {
+            exportModel.setCode("0000");
+            exportModel.setMsg("Data found successfully");
+            exportModel.setDsaExportList(exportsData);
+            exportModel.setTotalCount(String.valueOf(count));
         }
 
-        return exportsData;
+        return exportModel;
     }
 
     /**
@@ -311,21 +344,73 @@ public class ServiceImpl implements Service {
      * @return
      */
     @Override
-    public List<PricePegging> getAllPricePeggingData(String zone,String uploadDate) {
+    public PricePeggingData getAllPricePeggingData(String zone, String uploadDate) {
         List<PricePegging> pricePeggings = new ArrayList<>();
+        PricePeggingData pricePeggingData = new PricePeggingData();
 
+        Long count;
+        int pageNumber = 0;
+        int pageSize = 100;
+
+        Page<PricePegging> pricePeggingPage = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         if (zone != null && uploadDate != null) {
-            pricePeggings = pricePeggingRepository.findByZoneAndUpdatedDate(zone, uploadDate);
+            pricePeggingPage = (Page<PricePegging>) pricePeggingRepository.findByZoneAndUploadDate(zone, uploadDate, pageable);
+            pricePeggings = pricePeggingPage.getContent();
+            count = pricePeggingRepository.countByZoneAndUploadDate(zone, uploadDate);
+            System.out.println("Count" + count);
+
+
         } else if (zone != null) {
-            pricePeggings = pricePeggingRepository.findByZone(zone);
+            pricePeggingPage = pricePeggingRepository.findByZone(zone, pageable);
+            pricePeggings = pricePeggingPage.getContent();
+            count = pricePeggingRepository.countByZone(zone);
+            System.out.println("Count" + count);
+
         } else if (uploadDate != null) {
-            pricePeggings = pricePeggingRepository.findByUpdatedDate(uploadDate);
+            pricePeggingPage = pricePeggingRepository.findByUploadDate(uploadDate, pageable);
+            pricePeggings = pricePeggingPage.getContent();
+            count = pricePeggingRepository.countByUploadDate(uploadDate);
+            System.out.println("Count" + count);
+
+
         } else {
-            pricePeggings = pricePeggingRepository.findAll();
+            pricePeggingPage = pricePeggingRepository.findAll(pageable);
+            pricePeggings = pricePeggingPage.getContent();
+            count = pricePeggingRepository.countByfindAll();
+            System.out.println("Count" + count);
+        }
+        if (pricePeggings.isEmpty()) {
+            pricePeggingData.setCode("1111");
+            pricePeggingData.setMsg("Data not found");
+            pricePeggingData.setPricePeggingList(null);
+        } else {
+            pricePeggingData.setCode("0000");
+            pricePeggingData.setMsg("Data found successfully");
+            pricePeggingData.setPricePeggingList(pricePeggings);
+            pricePeggingData.setTotalCount(String.valueOf(count));
         }
 
-        return pricePeggings;
+        return pricePeggingData;
+//    }
+
+        /**
+         * @return
+         */
+
+
+        /**
+         * @return
+         */
+//    @Override
+//    public List getAllZone() {
+//        List zones = null;
+//
+//        zones = pricePeggingRepository.getUniqeZones();
+//        return zones;
+//    }
+//}
     }
 
     /**
@@ -333,10 +418,6 @@ public class ServiceImpl implements Service {
      */
     @Override
     public List getAllZone() {
-        List zones = null;
-
-        zones = pricePeggingRepository.getUniqeZones();
-        return zones;
+        return null;
     }
 }
-

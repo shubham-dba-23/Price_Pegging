@@ -7,6 +7,16 @@ import java.util.List;
 public class ExportModel {
     private String code;
     private String  msg;
+    
+    private  String totalCount;
+
+    public String getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(String totalCount) {
+        this.totalCount = totalCount;
+    }
 
     private List<DsaExport> dsaExportList;
 
@@ -32,5 +42,8 @@ public class ExportModel {
 
     public void setDsaExportList(List<DsaExport> dsaExportList) {
         this.dsaExportList = dsaExportList;
+    }
+
+    public void getDsaExportList(Object o) {
     }
 }

@@ -9,6 +9,15 @@ public class PricePeggingData {
     private String code;
     private String  msg;
 
+    public String getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(String totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    private String totalCount;
     public List<PricePegging> getPricePeggingList() {
         return pricePeggingList;
     }
